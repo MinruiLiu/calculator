@@ -4,10 +4,161 @@
 <head>
     <meta charset="UTF-8">
     <title>Calculator</title>
+    <style>
+        body {
+            display:table;
+            background-color: black;
+        }
+        div.buttons {
+            margin-bottom: 10px;
+            margin-left: 20px;
+        }
+        button {
+            margin-right: 2px;
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #333333;
+            text-align: center;
+            cursor: pointer;
+            font-size: 20px;
+            color: white;
+            transition: 0.2s;
+        }
+        button:active {
+            background-color: #6f6f6f;
+        }
+        button#zero {
+            width: 106px;
+            border-radius: 25px;
+            text-align: left;
+            padding-left: 20px;
+        }
+        button.operators {
+            background-color: #ff9e0b;
+        }
+        button.operators:active {
+            background-color: #fbc68c;
+        }
+        button#AC {
+            background-color: #a5a5a5;
+            color:black;
+            border-radius: 25px;
+            width: 161px;
+            text-align: left;
+            padding-left: 13px;
+        }
+        button#AC:active {
+            background-color: #d9d9d9;
+        }
+        h1 {
+            color: white;
+            font-family: arial;
+            text-align: right;
+            margin-right: 18px;
+        }
+    </style>
+    <script>
+        let result = 0;
+        let display = "";
+        let operation = "";
+        function updateDisplay(clear=false) {
+            if(!clear) {
+                document.getElementById('ans').innerHTML = display;
+            } else {
+                document.getElementById('ans').innerHTML = 0;
+            }
+        }
+        function clearScrene() {
+            display = "";
+            result = 0;
+            operation = "";
+            updateDisplay(true)
+            console.log(result);
+        }
+        function addStr(s) {
+            display += s;
+            updateDisplay();
+            console.log(display);
+        }
+        function showResult() {
+            processOperations("=");
+            display = result.toString();
+            updateDisplay();
+            console.log(result);
+        }
+        function formatNumber(number) {
+            let newNum;
+            if (Number.isInteger(number)) {
+                newNum = number.toString();
+            } else {
+                let numStr = number.toString();
+                let decimalIndex = numStr.indexOf('.');
+                let decimalPart = numStr.substring(decimalIndex + 1);
+                if (decimalPart.length > 5) {
+                    newNum = numStr.substring(0, decimalIndex + 6);
+                } else {
+                    newNum = numStr;
+                }
+            }
+            return parseFloat(newNum);
+        }
+        function processOperations(op) {
+            let curVal = parseFloat(display);
+            if(operation == "" || op != "=") {
+                result = curVal;
+            } else {
+                if(operation == "+") {
+                    result += curVal;
+                } else if(operation == "-") {
+                    result -= curVal;
+                } else if(operation == "*") {
+                    result *= curVal;
+                } else if(operation == "/") {
+                    result /= curVal;
+                }
+            }
+            result = formatNumber(result);
+            console.log(result);
+            operation = op;
+            // display = toString(result);
+            display = ""
+            updateDisplay(true);
+        }
+    </script>
 </head>
 
 <body>
-    <p>Hello World!</p>
+    <h1 id="ans">0</h1>
+    <div class="buttons">
+        <button id="AC" onclick="clearScrene()">AC</button>
+        <button class="operators" onclick="processOperations('/')">/</button>
+    </div>
+    <div class="buttons">
+        <button onclick="addStr(1)">1</button>
+        <button onclick="addStr(2)">2</button>
+        <button onclick="addStr(3)">3</button>
+        <button class="operators" onclick="processOperations('*')">x</button>
+    </div>
+    <div class="buttons">
+        <button onclick="addStr(4)">4</button>
+        <button onclick="addStr(5)">5</button>
+        <button onclick="addStr(6)">6</button>
+        <button class="operators" onclick="processOperations('-')">-</button>
+    </div>
+    <div class="buttons">
+        <button onclick="addStr(7)">7</button>
+        <button onclick="addStr(8)">8</button>
+        <button onclick="addStr(9)">9</button>
+        <button class="operators" onclick="processOperations('+')">+</button>
+    </div>
+    <div class="buttons">
+        <button id="zero" onclick="addStr(0)">0</button>
+        <button>.</button>
+        <button class="operators" onclick="showResult()">=</button>
+    </div>
 </body>
 
 </html>
